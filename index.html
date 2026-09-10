@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanova — Create, Design and Track QR Codes</title>
+<meta name="description" content="Turn every scan into a data point. Scanova is the QR Code platform for dynamic codes, branded design, mobile landing pages, and real-time tracking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#17140f;
+    --ink-soft:#2a251d;
+    --paper:#f5f3ee;
+    --paper-raised:#fffdf9;
+    --brand:#633be6;
+    --brand-dark:#4a26b8;
+    --brand-tint:#ece7fc;
+    --brand-light:#a996f2;
+    --line:#e2ddd1;
+    --line-dark:#3a352c;
+    --muted:#6b655a;
+    --muted-dark:#b7b0a2;
+    --radius-s:6px;
+    --radius-m:10px;
+    --maxw:1180px;
+    --display:'Space Grotesk', 'IBM Plex Sans', sans-serif;
+    --body:'IBM Plex Sans', -apple-system, sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:var(--body);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  img,svg{display:block; max-width:100%;}
+
+  a{color:inherit;}
+
+  h1,h2,h3{
+    font-family:var(--display);
+    line-height:1.12;
+    letter-spacing:-0.01em;
+    font-weight:600;
+  }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  section{padding:104px 0;}
+
+  .on-dark{background:var(--ink); color:var(--paper);}
+  .on-dark .muted{color:var(--muted-dark);}
+  .on-brand{background:var(--brand); color:var(--paper-raised);}
+
+  .muted{color:var(--muted);}
+
+  .eyebrow-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--display);
+    font-size:0.8125rem;
+    font-weight:600;
+    color:var(--brand);
+  }
+  .on-dark .eyebrow-kicker{color:var(--brand-light);}
+
+  .eyebrow-kicker::before{
+    content:"";
+    width:14px; height:14px;
+    background-image:
+      linear-gradient(currentColor 0 0),
+      linear-gradient(currentColor 0 0),
+      linear-gradient(currentColor 0 0),
+      linear-gradient(currentColor 0 0);
+    background-size:5px 5px;
+    background-repeat:no-repeat;
+    background-position:0 0, 9px 0, 0 9px, 9px 9px;
+  }
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-family:var(--body);
+    font-weight:600;
+    font-size:0.95rem;
+    padding:13px 24px;
+    border-radius:var(--radius-s);
+    border:1.5px solid transparent;
+    cursor:pointer;
+    text-decoration:none;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease, color .15s ease;
+    white-space:nowrap;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--brand); color:#fff8f6;}
+  .btn-primary:hover{background:var(--brand-dark);}
+  .btn-ghost{background:transparent; border-color:var(--ink); color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink); color:var(--paper);}
+  .on-dark .btn-ghost{border-color:var(--paper); color:var(--paper);}
+  .on-dark .btn-ghost:hover{background:var(--paper); color:var(--ink);}
+  .btn-text{
+    background:none; border:none; color:var(--ink); font-weight:600;
+    font-family:var(--body); font-size:0.95rem; cursor:pointer;
+    padding:13px 4px; border-bottom:1.5px solid var(--ink);
+    border-radius:0;
+  }
+  .on-dark .btn-text{color:var(--paper); border-color:var(--paper);}
+  .btn:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, button:focus-visible{
+    outline:2.5px solid var(--brand);
+    outline-offset:2px;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(245,243,238,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0;
+  }
+  .logo{
+    display:flex; align-items:center;
+    text-decoration:none; color:var(--ink);
+  }
+  .logo-img{height:24px; width:auto; display:block;}
+  .navlinks{display:flex; gap:36px; list-style:none;}
+  .navlinks a{
+    text-decoration:none; font-size:0.94rem; font-weight:500; color:var(--ink-soft);
+    padding:6px 0; border-bottom:1.5px solid transparent;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .navlinks a:hover{border-color:var(--brand); color:var(--ink);}
+  .nav-actions{display:flex; align-items:center; gap:20px;}
+  .nav-login{font-size:0.94rem; font-weight:600; text-decoration:none;}
+  .nav-toggle{display:none; background:none; border:none; cursor:pointer; padding:6px;}
+  .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after{
+    content:""; display:block; width:22px; height:2px; background:var(--ink);
+    position:relative; transition:transform .2s ease;
+  }
+  .nav-toggle span::before{position:absolute; top:-7px;}
+  .nav-toggle span::after{position:absolute; top:7px;}
+
+  /* ---------- hero ---------- */
+  .hero{padding:88px 0 96px;}
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:72px;
+    align-items:center;
+  }
+  .hero h1{font-size:3.4rem; margin:20px 0 22px; max-width:15ch;}
+  .hero .lede{font-size:1.15rem; color:var(--muted); max-width:46ch; margin-bottom:34px;}
+  .hero-ctas{display:flex; align-items:center; gap:28px; flex-wrap:wrap;}
+  .hero-note{font-size:0.85rem; color:var(--muted); margin-top:14px;}
+
+  .trustbar{margin-top:64px;}
+  .trustbar p{font-size:0.8rem; color:var(--muted); margin-bottom:18px; letter-spacing:0.02em;}
+  .trust-logos{
+    display:flex; flex-wrap:wrap; gap:34px 42px; align-items:center;
+    font-family:var(--display); font-weight:600; color:var(--ink-soft); opacity:0.55;
+    font-size:1.05rem;
+  }
+
+  /* hero QR visual */
+  .qr-visual{
+    position:relative;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius-m);
+    padding:36px;
+    box-shadow:0 1px 0 var(--line);
+  }
+  .qr-visual svg{width:100%; height:auto;}
+  .qr-caption{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-top:20px; padding-top:16px; border-top:1px solid var(--line);
+    font-size:0.82rem; color:var(--muted);
+  }
+  .qr-caption strong{color:var(--ink); font-family:var(--display); font-size:0.95rem;}
+
+  .qr-module{opacity:0; transform-origin:center; animation:qrIn .4s ease forwards;}
+  .qr-module.lit{fill:var(--brand);}
+  .scan-sweep{
+    transform:translateY(-6%);
+    animation:sweep 2.1s cubic-bezier(.6,0,.3,1) 0.15s 1 forwards;
+  }
+  @keyframes qrIn{ to{opacity:1;} }
+  @keyframes sweep{
+    0%{transform:translateY(-6%); opacity:1;}
+    85%{opacity:1;}
+    100%{transform:translateY(106%); opacity:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .qr-module{animation:none; opacity:1;}
+    .scan-sweep{animation:none; display:none;}
+  }
+
+  /* ---------- section heads ---------- */
+  .section-head{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    align-items:end;
+    margin-bottom:56px;
+  }
+  .section-head h2{font-size:2.1rem; margin-top:14px; max-width:16ch;}
+  .section-head .lede{color:var(--muted); font-size:1.02rem; max-width:42ch;}
+  .on-dark .section-head .lede{color:var(--muted-dark);}
+
+  /* ---------- features ---------- */
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line-dark);
+    border:1px solid var(--line-dark);
+  }
+  .feature-card{
+    background:var(--ink);
+    padding:34px 30px 30px;
+    min-height:220px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .feature-num{
+    font-family:var(--display); font-size:0.8rem; color:var(--brand-light); font-weight:600;
+  }
+  .feature-card h3{font-size:1.15rem; color:var(--paper);}
+  .feature-card p{font-size:0.93rem; color:var(--muted-dark); max-width:34ch;}
+
+  /* ---------- how it works ---------- */
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:48px;
+    counter-reset:stepnum;
+  }
+  .step{position:relative; padding-top:28px; border-top:2px solid var(--ink);}
+  .step-index{
+    font-family:var(--display); font-weight:700; font-size:1rem;
+    color:var(--brand); display:block; margin-bottom:14px;
+  }
+  .step h3{font-size:1.2rem; margin-bottom:10px;}
+  .step p{color:var(--muted); font-size:0.95rem; max-width:32ch;}
+
+  /* ---------- pricing ---------- */
+  .price-toggle{
+    display:inline-flex; align-items:center; gap:14px;
+    background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:999px; padding:5px; margin-bottom:52px;
+  }
+  .price-toggle button{
+    font-family:var(--body); font-weight:600; font-size:0.88rem;
+    border:none; background:none; cursor:pointer;
+    padding:9px 20px; border-radius:999px; color:var(--muted);
+    transition:background .15s ease, color .15s ease;
+  }
+  .price-toggle button.active{background:var(--ink); color:var(--paper);}
+  .save-pill{
+    font-size:0.72rem; font-weight:600; color:var(--brand);
+    background:var(--brand-tint); padding:2px 8px; border-radius:999px;
+    margin-left:6px;
+  }
+
+  .pricing-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+    align-items:stretch;
+  }
+  .pricing-grid-5{grid-template-columns:repeat(5, 1fr);}
+  .plan{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius-m);
+    padding:26px 20px;
+    display:flex; flex-direction:column;
+  }
+  .plan.featured{
+    border-color:var(--ink);
+    box-shadow:0 0 0 1px var(--ink);
+    position:relative;
+  }
+  .plan-flag{
+    position:absolute; top:-13px; left:26px;
+    background:var(--brand); color:#fff;
+    font-size:0.72rem; font-weight:700; letter-spacing:0.02em;
+    padding:4px 11px; border-radius:999px;
+    font-family:var(--display);
+  }
+  .plan-name{font-family:var(--display); font-weight:600; font-size:1.05rem; margin-bottom:6px; color:var(--ink);}
+  .plan-desc{font-size:0.87rem; color:var(--muted); margin-bottom:22px; min-height:44px;}
+  .plan-price{display:flex; align-items:baseline; gap:6px; margin-bottom:4px;}
+  .plan-price .num{font-family:var(--display); font-size:1.9rem; font-weight:700; color:var(--ink);}
+  .plan-price .per{font-size:0.85rem; color:var(--muted);}
+  .plan-billed{font-size:0.78rem; color:var(--muted); margin-bottom:26px;}
+  .plan .btn{width:100%; margin-bottom:26px;}
+  .plan-features{list-style:none; display:flex; flex-direction:column; gap:12px; font-size:0.88rem;}
+  .plan-features li{display:flex; gap:10px; align-items:flex-start; color:var(--ink-soft); text-align:left;}
+  .plan .btn-ghost{border-color:var(--ink); color:var(--ink);}
+  .plan .btn-ghost:hover{background:var(--ink); color:var(--paper-raised);}
+  .plan-features li::before{
+    content:""; flex:none; width:7px; height:7px; margin-top:6px;
+    background:var(--brand);
+  }
+
+  /* ---------- security strip ---------- */
+  .security-strip{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:24px;
+    padding:30px 0;
+    border-top:1px solid var(--line-dark);
+    border-bottom:1px solid var(--line-dark);
+    margin-top:88px;
+    font-size:0.88rem;
+  }
+  .badge-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .badge{
+    border:1px solid var(--line-dark); border-radius:999px;
+    padding:7px 16px; font-family:var(--display); font-size:0.78rem; letter-spacing:0.02em;
+    color:var(--muted-dark);
+  }
+
+  /* ---------- contact ---------- */
+  .contact-grid{
+    display:grid;
+    grid-template-columns:0.85fr 1.15fr;
+    gap:64px;
+  }
+  .contact-info h2{font-size:2.1rem; margin-top:14px; max-width:14ch;}
+  .contact-info .lede{color:var(--muted-dark); margin:18px 0 36px; max-width:38ch;}
+  .info-row{
+    display:flex; gap:16px; padding:18px 0;
+    border-top:1px solid var(--line-dark);
+  }
+  .info-row:last-of-type{border-bottom:1px solid var(--line-dark);}
+  .info-row .label{font-size:0.78rem; color:var(--muted-dark); min-width:88px; padding-top:2px;}
+  .info-row .value{font-size:0.98rem;}
+  .info-row a{text-decoration:none; border-bottom:1px solid var(--line-dark);}
+
+  form{
+    background:var(--paper-raised); color:var(--ink);
+    border-radius:var(--radius-m); padding:38px;
+  }
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .field{margin-bottom:20px;}
+  .field label{
+    display:block; font-size:0.82rem; font-weight:600; margin-bottom:8px; color:var(--ink-soft);
+  }
+  .field input, .field textarea, .field select{
+    width:100%; font-family:var(--body); font-size:0.95rem;
+    padding:12px 14px; border:1.5px solid var(--line); border-radius:6px;
+    background:#fff; color:var(--ink);
+    transition:border-color .15s ease;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus{
+    border-color:var(--brand); outline:none;
+  }
+  .field textarea{resize:vertical; min-height:110px;}
+  .form-note{font-size:0.78rem; color:var(--muted); margin-top:16px;}
+  .form-success{
+    display:none; align-items:center; gap:12px;
+    background:#eef4ee; border:1px solid #c9ddc9; color:#2b5c33;
+    padding:14px 16px; border-radius:6px; font-size:0.9rem; margin-bottom:20px;
+  }
+  .form-success.show{display:flex;}
+  .form-success::before{
+    content:""; flex:none; width:16px; height:16px; border-radius:50%;
+    background:#2b5c33;
+  }
+
+  /* ---------- final cta ---------- */
+  .final-cta{
+    text-align:left;
+    padding:100px 0;
+  }
+  .final-cta .wrap{
+    display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap;
+  }
+  .final-cta h2{font-size:2.5rem; max-width:16ch; color:#fff8f6;}
+  .final-cta .actions{display:flex; gap:18px; flex-wrap:wrap;}
+  .final-cta .btn-ghost{border-color:#fff8f6; color:#fff8f6;}
+  .final-cta .btn-ghost:hover{background:#fff8f6; color:var(--brand);}
+  .final-cta .btn-primary{background:var(--ink); color:#fff8f6;}
+  .final-cta .btn-primary:hover{background:var(--ink-soft);}
+
+  /* ---------- footer ---------- */
+  footer{padding:56px 0 36px; font-size:0.86rem;}
+  .footer-top{
+    display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap;
+    padding-bottom:40px; border-bottom:1px solid var(--line-dark);
+  }
+  .footer-cols{display:flex; gap:64px; flex-wrap:wrap;}
+  .footer-col h4{
+    font-family:var(--display); font-size:0.82rem; font-weight:600;
+    color:var(--paper); margin-bottom:16px;
+  }
+  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{color:var(--muted-dark); text-decoration:none;}
+  .footer-col a:hover{color:var(--paper);}
+  .footer-bottom{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top:28px; color:var(--muted-dark); flex-wrap:wrap; gap:14px;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 980px){
+    section{padding:76px 0;}
+    .hero-grid{grid-template-columns:1fr; gap:52px;}
+    .hero h1{font-size:2.6rem; max-width:none;}
+    .section-head{grid-template-columns:1fr;}
+    .feature-grid{grid-template-columns:repeat(2,1fr);}
+    .steps{grid-template-columns:1fr; gap:36px;}
+    .pricing-grid{grid-template-columns:repeat(2,1fr);}
+    .contact-grid{grid-template-columns:1fr; gap:44px;}
+    .field-row{grid-template-columns:1fr;}
+    .navlinks, .nav-actions .nav-login{display:none;}
+    .nav-toggle{display:block;}
+    .final-cta .wrap{flex-direction:column; align-items:flex-start;}
+  }
+  @media (max-width: 620px){
+    .wrap{padding:0 20px;}
+    .feature-grid{grid-template-columns:1fr;}
+    .pricing-grid{grid-template-columns:1fr;}
+    .hero-ctas{flex-direction:column; align-items:flex-start;}
+    form{padding:26px;}
+    .security-strip{flex-direction:column; align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo">
+      <img src="data:image/png;base64,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" alt="Scanova" class="logo-img">
+    </a>
+    <nav>
+      <ul class="navlinks">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a href="#contact" class="nav-login">Log in</a>
+      <a href="#pricing" class="btn btn-primary">Start free trial</a>
+      <button class="nav-toggle" aria-label="Menu"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow-kicker">A product of Trycon</span>
+        <h1>QR Codes that keep working after they're printed</h1>
+        <p class="lede">Scanova turns a static square of ink into a live channel. Build dynamic QR Codes, design them around your brand, send people to a mobile landing page, and see exactly who's scanning — without touching the printed code again.</p>
+        <div class="hero-ctas">
+          <a href="#pricing" class="btn btn-primary">Start free trial</a>
+          <a href="#contact" class="btn-text">Talk to sales</a>
+        </div>
+        <p class="hero-note">14-day free trial · No credit card required</p>
+
+        <div class="trustbar">
+          <p>Trusted by teams shipping print campaigns at scale</p>
+          <div class="trust-logos" aria-label="Customer logos">
+            <span>Cisco</span><span>Toyota</span><span>HP</span><span>Nestlé</span><span>Walmart</span><span>AT&amp;T</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qr-visual" role="img" aria-label="Illustration of a QR code with a scan sweep highlighting tracked modules">
+        <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="qrClip"><rect x="0" y="0" width="220" height="220" rx="4"/></clipPath>
+          </defs>
+          <!-- finder patterns -->
+          <g fill="var(--ink)">
+            <rect x="8" y="8" width="34" height="34" fill="none" stroke="var(--ink)" stroke-width="6"/>
+            <rect x="20" y="20" width="10" height="10"/>
+            <rect x="178" y="8" width="34" height="34" fill="none" stroke="var(--ink)" stroke-width="6"/>
+            <rect x="190" y="20" width="10" height="10"/>
+            <rect x="8" y="178" width="34" height="34" fill="none" stroke="var(--ink)" stroke-width="6"/>
+            <rect x="20" y="190" width="10" height="10"/>
+          </g>
+          <!-- module field (deterministic pseudo-random pattern) -->
+          <g id="modules"></g>
+          <!-- scan sweep -->
+          <g clip-path="url(#qrClip)">
+            <rect class="scan-sweep" x="0" y="0" width="220" height="26" fill="var(--brand)" opacity="0.16"/>
+          </g>
+        </svg>
+        <div class="qr-caption">
+          <span><strong>2,481</strong> scans this week</span>
+          <span>Live tracking</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="on-dark" id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow-kicker">What you get</span>
+          <h2>Everything between the print and the scan</h2>
+        </div>
+        <p class="lede">Six things Scanova handles so a QR Code stops being a one-way barcode and starts being a channel you can measure and improve.</p>
+      </div>
+    </div>
+    <div class="wrap" style="padding:0;">
+      <div class="feature-grid">
+        <div class="feature-card">
+          <span class="feature-num">Dynamic codes</span>
+          <h3>Edit content after printing</h3>
+          <p>Change the destination link, swap an offer, or fix a typo — the printed code never has to be reprinted.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">Custom design</span>
+          <h3>Codes that match your brand</h3>
+          <p>Add your logo, colors, eye patterns, and frames so the code looks like it belongs on your material.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">Tracking &amp; analytics</span>
+          <h3>See every scan as it happens</h3>
+          <p>Time, location, device, and OS for every scan — enough detail to know which placement is actually working.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">Mobile landing pages</span>
+          <h3>A destination, not just a link</h3>
+          <p>Build a mobile-optimized page with menus, forms, videos, or RSVPs — no developer required.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">Lead generation</span>
+          <h3>Turn scans into contacts</h3>
+          <p>Collect names and emails right at the point of scan, and export the list whenever you need it.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">APIs &amp; integrations</span>
+          <h3>Fits your existing stack</h3>
+          <p>Generate and manage codes programmatically, or connect to Zapier, Google Analytics, and your ad platforms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow-kicker">Setup</span>
+          <h2>Live in three steps</h2>
+        </div>
+        <p class="lede">Most teams have a working, trackable QR Code inside of ten minutes — no design tool or developer needed.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="step-index">01</span>
+          <h3>Pick a QR Code type</h3>
+          <p>Website, document, business card, Wi-Fi, event, menu — choose from 26 categories built for a specific use case.</p>
+        </div>
+        <div class="step">
+          <span class="step-index">02</span>
+          <h3>Design and connect it</h3>
+          <p>Add your brand colors and logo, then point it at a URL, a landing page, or a file you upload directly.</p>
+        </div>
+        <div class="step">
+          <span class="step-index">03</span>
+          <h3>Print, publish, and watch it work</h3>
+          <p>Download in PNG, SVG, or PDF, put it out in the world, and track scans from the same dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="on-dark" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow-kicker">Pricing</span>
+          <h2>Plans that grow with your campaigns</h2>
+        </div>
+        <p class="lede">Every plan includes unlimited scans and both dynamic and static codes. Upgrade when you need more codes, more users, or deeper analytics.</p>
+      </div>
+
+      <div class="price-toggle" role="group" aria-label="Billing frequency">
+        <button type="button" id="toggleMonthly" class="active">Monthly</button>
+        <button type="button" id="toggleAnnual">Annually <span class="save-pill">Save up to 40%</span></button>
+      </div>
+
+      <div class="pricing-grid pricing-grid-5">
+        <div class="plan">
+          <div class="plan-name">Basic</div>
+          <p class="plan-desc">Test the waters with a first campaign.</p>
+          <div class="plan-price"><span class="num">$5</span><span class="per">/month</span></div>
+          <p class="plan-billed">Billed annually · annual only</p>
+          <a href="#contact" class="btn btn-ghost">Subscribe</a>
+          <ul class="plan-features">
+            <li>3 QR Codes</li>
+            <li>Unlimited scans</li>
+            <li>14 QR categories</li>
+            <li>Basic analytics (30 days)</li>
+          </ul>
+        </div>
+
+        <div class="plan">
+          <div class="plan-name">Lite</div>
+          <p class="plan-desc">For small teams running a handful of campaigns.</p>
+          <div class="plan-price"><span class="num price-amount" data-monthly="15" data-annual="9">$15</span><span class="per">/month</span></div>
+          <p class="plan-billed billed-note">Billed monthly</p>
+          <a href="#contact" class="btn btn-ghost">Subscribe</a>
+          <ul class="plan-features">
+            <li>10 QR Codes / pages</li>
+            <li>All 26 QR categories</li>
+            <li>Mobile landing pages</li>
+            <li>Lead generation</li>
+          </ul>
+        </div>
+
+        <div class="plan">
+          <div class="plan-name">Standard</div>
+          <p class="plan-desc">For growing teams running several campaigns at once.</p>
+          <div class="plan-price"><span class="num price-amount" data-monthly="50" data-annual="35">$50</span><span class="per">/month</span></div>
+          <p class="plan-billed billed-note">Billed monthly</p>
+          <a href="#contact" class="btn btn-ghost">Subscribe</a>
+          <ul class="plan-features">
+            <li>50 QR Codes / pages</li>
+            <li>Advanced analytics</li>
+            <li>Zapier integration</li>
+            <li>Bulk operations</li>
+          </ul>
+        </div>
+
+        <div class="plan featured">
+          <span class="plan-flag">Most popular</span>
+          <div class="plan-name">Pro</div>
+          <p class="plan-desc">For marketing teams running campaigns at scale.</p>
+          <div class="plan-price"><span class="num price-amount" data-monthly="100" data-annual="75">$100</span><span class="per">/month</span></div>
+          <p class="plan-billed billed-note">Billed monthly</p>
+          <a href="#contact" class="btn btn-primary">Subscribe</a>
+          <ul class="plan-features">
+            <li>500 QR Codes / pages</li>
+            <li>5 users + 1 custom domain</li>
+            <li>Exact GPS scan location</li>
+            <li>Phone support</li>
+          </ul>
+        </div>
+
+        <div class="plan">
+          <div class="plan-name">Enterprise</div>
+          <p class="plan-desc">For organizations with compliance and scale needs.</p>
+          <div class="plan-price"><span class="num">Custom</span></div>
+          <p class="plan-billed">Request a quote</p>
+          <a href="#contact" class="btn btn-ghost">Contact sales</a>
+          <ul class="plan-features">
+            <li>Unlimited QR Codes</li>
+            <li>SSO &amp; custom user roles</li>
+            <li>Dedicated relationship manager</li>
+            <li>Dynamic QR Code APIs</li>
+          </ul>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:24px; font-size:0.85rem;">Ultra Lite — a $150 one-time plan for a single lifetime Dynamic QR Code — is also available. See the full comparison at scanova.io/pricing.</p>
+
+
+      <div class="security-strip">
+        <div class="badge-row">
+          <span class="badge">ISO/IEC 27001:2022</span>
+          <span class="badge">GDPR compliant</span>
+          <span class="badge">SOC 2</span>
+        </div>
+        <span class="muted">Built for data safety, at every plan level.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="on-brand final-cta">
+    <div class="wrap">
+      <h2>Ready to make your print collateral trackable?</h2>
+      <div class="actions">
+        <a href="#pricing" class="btn btn-primary">Start free trial</a>
+        <a href="#contact" class="btn btn-ghost">Book a demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="on-dark" id="contact">
+    <div class="wrap contact-grid">
+      <div class="contact-info">
+        <span class="eyebrow-kicker">Get in touch</span>
+        <h2>Talk to the team</h2>
+        <p class="lede">Questions about a plan, an enterprise rollout, or something specific to your use case — send us a note and we'll follow up.</p>
+
+        <div class="info-row">
+          <span class="label">Email</span>
+          <span class="value"><a href="mailto:support@scanova.io">support@scanova.io</a></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Phone</span>
+          <span class="value"><a href="tel:+919289093031">+91 92890 93031</a></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Company</span>
+          <span class="value">A product of Trycon Technologies</span>
+        </div>
+      </div>
+
+      <form id="contactForm" novalidate>
+        <div class="form-success" id="formSuccess">Thanks — your message is in. Our team will reach out shortly.</div>
+        <div class="field-row">
+          <div class="field">
+            <label for="fname">Full name</label>
+            <input type="text" id="fname" name="fname" placeholder="Jordan Lee" required>
+          </div>
+          <div class="field">
+            <label for="femail">Work email</label>
+            <input type="email" id="femail" name="femail" placeholder="jordan@company.com" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="fcompany">Company</label>
+            <input type="text" id="fcompany" name="fcompany" placeholder="Company name">
+          </div>
+          <div class="field">
+            <label for="finterest">I'm interested in</label>
+            <select id="finterest" name="finterest">
+              <option>Starting a free trial</option>
+              <option>Pro or Standard plan</option>
+              <option>Enterprise plan</option>
+              <option>Something else</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fmessage">Message</label>
+          <textarea id="fmessage" name="fmessage" placeholder="Tell us a bit about what you're trying to do" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Send message</button>
+        <p class="form-note">By submitting, you agree to Trycon's Privacy Policy. We'll only use this to respond to your query.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="on-dark">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <a href="#top" class="logo">
+          <img src="data:image/png;base64,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" alt="Scanova" class="logo-img">
+        </a>
+        <p class="muted" style="margin-top:14px; max-width:28ch;">The easiest way to create, design, and track QR Codes. A product of Trycon.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#how">How it works</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy notice</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Data processing agreement</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Scanova. All rights reserved.</span>
+      <span>QR Code is a registered trademark of Denso Wave Incorporated.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- Build a deterministic pseudo-random QR module field ----
+  (function buildQR(){
+    const svg = document.getElementById('modules');
+    if(!svg) return;
+    const size = 10;      // module size
+    const cols = 20, rows = 20;
+    let seed = 42;
+    function rand(){ seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+
+    const frag = document.createDocumentFragment();
+    let delay = 0;
+    for(let r = 0; r < rows; r++){
+      for(let c = 0; c < cols; c++){
+        // skip finder-pattern corners
+        const inCorner =
+          (r < 5 && c < 5) || (r < 5 && c > cols-6) || (r > rows-6 && c < 5);
+        if(inCorner) continue;
+        if(rand() > 0.46) continue;
+
+        const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+        rect.setAttribute('class','qr-module');
+        rect.setAttribute('x', c*size);
+        rect.setAttribute('y', r*size);
+        rect.setAttribute('width', size-1.5);
+        rect.setAttribute('height', size-1.5);
+        const isLit = rand() > 0.86;
+        rect.setAttribute('fill', isLit ? 'var(--brand)' : 'var(--ink)');
+        rect.style.animationDelay = (delay*0.004) + 's';
+        delay++;
+        frag.appendChild(rect);
+      }
+    }
+    svg.appendChild(frag);
+  })();
+
+  // ---- Pricing toggle ----
+  (function pricingToggle(){
+    const mBtn = document.getElementById('toggleMonthly');
+    const aBtn = document.getElementById('toggleAnnual');
+    const amounts = document.querySelectorAll('.price-amount');
+    const notes = document.querySelectorAll('.billed-note');
+    if(!mBtn || !aBtn) return;
+
+    function setMode(mode){
+      mBtn.classList.toggle('active', mode === 'monthly');
+      aBtn.classList.toggle('active', mode === 'annual');
+      amounts.forEach(el=>{
+        const val = mode === 'monthly' ? el.dataset.monthly : el.dataset.annual;
+        el.textContent = '$' + val;
+      });
+      notes.forEach(el=>{
+        el.textContent = mode === 'monthly' ? 'Billed monthly' : 'Billed annually';
+      });
+    }
+    mBtn.addEventListener('click', ()=> setMode('monthly'));
+    aBtn.addEventListener('click', ()=> setMode('annual'));
+  })();
+
+  // ---- Contact form (static demo — no backend) ----
+  (function contactForm(){
+    const form = document.getElementById('contactForm');
+    const success = document.getElementById('formSuccess');
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!form.checkValidity()){ form.reportValidity(); return; }
+      success.classList.add('show');
+      form.reset();
+      success.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  })();
+
+  // ---- Mobile nav toggle (reveals links inline) ----
+  (function mobileNav(){
+    const btn = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.navlinks');
+    if(!btn || !links) return;
+    btn.addEventListener('click', function(){
+      const open = links.style.display === 'flex';
+      links.style.display = open ? 'none' : 'flex';
+      links.style.flexDirection = 'column';
+      links.style.position = 'absolute';
+      links.style.top = '64px';
+      links.style.left = '0';
+      links.style.right = '0';
+      links.style.background = 'var(--paper)';
+      links.style.padding = '20px 32px';
+      links.style.gap = '16px';
+      links.style.borderBottom = '1px solid var(--line)';
+    });
+  })();
+</script>
+
+</body>
+</html>
