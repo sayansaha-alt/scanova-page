@@ -1,5 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script>
+(function(w,d,s,o,f,js,fjs){
+  w['ScanovaTrackingObject']=o;w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(arguments)};
+  js=d.createElement(s),fjs=d.getElementsByTagName(s)[0];
+  js.id=o;js.src=f;js.async=1;fjs.parentNode.insertBefore(js,fjs);
+})(window,document,'script','scanova','https://cdn.scanova.io/ct/js/qcg.min.js');
+
+// 1. Initialize SDK
+scanova('init', 'qM9zsqCYkqOxrPf5DWupYuewO1GQncfSTu3VnSIr7X18q901280qCPmrIY4DHryT', {
+  debug: false,         // Turn on (true) to see logs in the browser console
+  autoPageview: true,   // Automatically tracks a 'pageview' event on load
+  autoClicks: true,     // Automatically tracks clicks on <a>, <button>, and [role="button"]
+  autoForms: true,      // Automatically tracks <form> submissions
+  autoScroll: true      // Automatically tracks scroll depth milestones (25%, 50%, etc)
+});
+</script>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
